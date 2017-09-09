@@ -1,0 +1,63 @@
+﻿<h1>Grupe</h1>
+<p>
+    <button type="button" class="btn btn-primary" title="Nova grupa" data-toggle="modal" data-target="#add-modal">
+        <span class="glyphicon glyphicon-plus"></span>
+    </button>
+</p>
+
+<p *ngIf="!tags"><em>Loading...</em></p>
+
+<table class='table' *ngIf="tags">
+    <thead>
+        <tr>
+            <th>Naziv grupe</th>
+            <th>Broj članova</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let tag of tags" (click)="onSelect(tag)">
+            <td>{{ tag.name }}</td>
+            <td>{{ tag.count }}</td>
+            <td>
+                <div class="btn-group">
+                    <a class="btn btn-default btn-sm" title="Uredi">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
+                    <a class="btn btn-default btn-sm" title="Detalji">
+                        <span class="glyphicon glyphicon-info-sign"></span>
+                    </a>
+                    <a class="btn btn-default btn-sm" title="Obriši">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </a>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div *ngIf="selectedTag">
+    <b>Odabrana grupa je {{ selectedTag.name }}</b>
+</div>
+
+<div id="add-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Nova grupa</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label class="control-label">Naziv grupe</label>
+                        <input type="text" class="form-control" placeholder="Naziv" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Odustani</button>
+            </div>
+        </div>
+
+    </div>
+</div>

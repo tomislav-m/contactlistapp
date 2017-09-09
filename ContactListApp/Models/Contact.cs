@@ -22,5 +22,13 @@ namespace ContactListApp.Models
         public virtual ICollection<PhoneNumber> Numbers { get; set; }
         public virtual ICollection<Email> Emails { get; set; }
         public virtual ICollection<ContactTag> ContactTags { get; set; }
+
+        public string FullName
+        {
+            get
+            {
+                return FirstName + " " + LastName;
+            }
+        }
     }
 }

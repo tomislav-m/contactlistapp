@@ -10,6 +10,7 @@ import { HomeComponent } from './components/home/home.component';
 import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
 import { CounterComponent } from './components/counter/counter.component';
 import { ContactsComponent } from './components/contacts/contacts.component';
+import { TagsComponent } from './components/tags/tags.component';
 
 @NgModule({
     declarations: [
@@ -18,7 +19,8 @@ import { ContactsComponent } from './components/contacts/contacts.component';
         CounterComponent,
         FetchDataComponent,
         HomeComponent,
-		ContactsComponent
+		ContactsComponent,
+		TagsComponent
     ],
     imports: [
         CommonModule,
@@ -30,6 +32,7 @@ import { ContactsComponent } from './components/contacts/contacts.component';
             { path: 'counter', component: CounterComponent },
             { path: 'fetch-data', component: FetchDataComponent },
 			{ path: 'home', component: ContactsComponent },
+			{ path: 'tags', component: TagsComponent },
             { path: '**', redirectTo: 'home' }
         ])
     ]

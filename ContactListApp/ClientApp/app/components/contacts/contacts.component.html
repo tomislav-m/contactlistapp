@@ -5,14 +5,15 @@
 <table class='table' *ngIf="contacts">
     <thead>
         <tr>
-            <th>Ime</th>
-            <th>Prezime</th>
+            <th>Ime i prezime</th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let contact of contacts">
-            <td>{{ contact.firstName }}</td>
-            <td>{{ contact.lastName }}</td>
+        <tr *ngFor="let contact of contacts" (click)="onSelect(contact)">
+            <td>{{ contact.fullName }}</td>
         </tr>
     </tbody>
 </table>
+<div *ngIf="selectedContact">
+    <b>Odabrani kontakt je {{ selectedContact.fullName }}</b>
+</div>
