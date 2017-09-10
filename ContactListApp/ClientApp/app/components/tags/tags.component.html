@@ -49,12 +49,13 @@
             <div class="modal-body">
                 <form>
                     <div class="form-group">
-                        <label class="control-label">Naziv grupe</label>
-                        <input type="text" class="form-control" placeholder="Naziv" />
+                        <label class="control-label">Nova grupa</label>
+                        <input [(ngModel)]="newTag.name" name="tagName" class="form-control" placeholder="Naziv" />
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
+                <a class="btn btn-primary" (click)="addTag()">Dodaj</a>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Odustani</button>
             </div>
         </div>
