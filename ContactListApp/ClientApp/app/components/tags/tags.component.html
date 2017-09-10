@@ -1,4 +1,7 @@
-﻿<h1>Grupe</h1>
+﻿<div *ngIf="tempMessage && tempMessage.message != ''">
+    <p class="alert" [ngClass]="( tempMessage.status === true)?'alert-success' : 'alert-danger'">{{ tempMessage.message }}</p>
+</div>
+<h1>Grupe</h1>
 <p>
     <button type="button" class="btn btn-primary" title="Nova grupa" data-toggle="modal" data-target="#add-modal">
         <span class="glyphicon glyphicon-plus"></span>
@@ -16,7 +19,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let tag of tags" (click)="onSelect(tag)">
+        <tr *ngFor="let tag of tags">
             <td>{{ tag.name }}</td>
             <td>{{ tag.count }}</td>
             <td>
@@ -27,7 +30,7 @@
                     <a class="btn btn-default btn-sm" title="Detalji">
                         <span class="glyphicon glyphicon-info-sign"></span>
                     </a>
-                    <a class="btn btn-default btn-sm" title="Obriši">
+                    <a class="btn btn-default btn-sm" title="Obriši" (click)="deleteTag(tag)">
                         <span class="glyphicon glyphicon-remove"></span>
                     </a>
                 </div>
@@ -35,9 +38,6 @@
         </tr>
     </tbody>
 </table>
-<div *ngIf="selectedTag">
-    <b>Odabrana grupa je {{ selectedTag.name }}</b>
-</div>
 
 <div id="add-modal" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -55,7 +55,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <a class="btn btn-primary" (click)="addTag()">Dodaj</a>
+                <a class="btn btn-primary" data-dismiss="modal" (click)="addTag()">Dodaj</a>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Odustani</button>
             </div>
         </div>
