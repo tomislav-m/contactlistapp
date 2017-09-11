@@ -20,14 +20,14 @@
     </thead>
     <tbody>
         <tr *ngFor="let tag of tags">
-            <td><a [routerLink]="['/tagdetails', tag.id]">{{ tag.name }}</a></td>
+            <td>{{ tag.name }}</td>
             <td>{{ tag.count }}</td>
             <td>
                 <div class="btn-group">
                     <a class="btn btn-default btn-sm" title="Uredi" data-toggle="modal" data-target="#edit-modal" (click)="onClickEditTag(tag)">
                         <span class="glyphicon glyphicon-pencil"></span>
                     </a>
-                    <a class="btn btn-default btn-sm" title="Detalji">
+                    <a class="btn btn-default btn-sm" title="Detalji" [routerLink]="['/tagdetails', tag.id]">
                         <span class="glyphicon glyphicon-info-sign"></span>
                     </a>
                     <a class="btn btn-default btn-sm" title="Obriši" (click)="deleteTag(tag)">
