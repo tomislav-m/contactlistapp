@@ -48,14 +48,34 @@ namespace ContactListApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            var tag = await _context.Tags.SingleOrDefaultAsync(m => m.Id == id);
+            var tag = await _context.Tags
+                .Include(t => t.ContactTags)
+                .ThenInclude(c => c.Contact)
+                .SingleOrDefaultAsync(m => m.Id == id);
 
             if (tag == null)
             {
                 return NotFound();
             }
 
-            return Ok(tag);
+            var contacts = new List<ContactApiModel>();
+            foreach(var contact in tag.ContactTags.Select(t => t.Contact))
+            {
+                contacts.Add(new ContactApiModel {
+                    Id = contact.Id,
+                    FirstName = contact.FirstName,
+                    LastName = contact.LastName
+                });
+            }
+            
+            var tagToReturn = new TagApiModel {
+                Id = tag.Id,
+                Name = tag.Name,
+                Contacts = contacts,
+                Count = contacts.Count
+            };
+
+            return Ok(tagToReturn);
         }
 
         // PUT: api/Tags/5

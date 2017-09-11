@@ -20,11 +20,11 @@
     </thead>
     <tbody>
         <tr *ngFor="let tag of tags">
-            <td>{{ tag.name }}</td>
+            <td><a [routerLink]="['/tagdetails', tag.id]">{{ tag.name }}</a></td>
             <td>{{ tag.count }}</td>
             <td>
                 <div class="btn-group">
-                    <a class="btn btn-default btn-sm" title="Uredi">
+                    <a class="btn btn-default btn-sm" title="Uredi" data-toggle="modal" data-target="#edit-modal" (click)="onClickEditTag(tag)">
                         <span class="glyphicon glyphicon-pencil"></span>
                     </a>
                     <a class="btn btn-default btn-sm" title="Detalji">
@@ -49,8 +49,7 @@
             <div class="modal-body">
                 <form>
                     <div class="form-group">
-                        <label class="control-label">Nova grupa</label>
-                        <input [(ngModel)]="newTag.name" name="tagName" class="form-control" placeholder="Naziv" />
+                        <input [(ngModel)]="newTag.name" name="tagName" class="form-control" placeholder="Naziv grupe" />
                     </div>
                 </form>
             </div>
@@ -59,6 +58,27 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">Odustani</button>
             </div>
         </div>
+    </div>
+</div>
 
+<div id="edit-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Uredi grupu</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <input [(ngModel)]="newTag.name" name="tagName" class="form-control" placeholder="Naziv grupe" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-primary" data-dismiss="modal" (click)="editTag()">Spremi</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Odustani</button>
+            </div>
+        </div>
     </div>
 </div>

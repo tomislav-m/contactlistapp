@@ -1,0 +1,33 @@
+﻿<div *ngIf="tempMessage && tempMessage.message != ''">
+    <p class="alert" [ngClass]="( tempMessage.status === true)?'alert-success' : 'alert-danger'">{{ tempMessage.message }}</p>
+</div>
+<h1>{{ tag.name }}</h1>
+
+<p *ngIf="!tag"><em>Loading...</em></p>
+
+<table *ngIf="tag" class="table">
+    <thead>
+        <tr>
+            <th>Ime i prezime</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let contact of tag.contacts">
+            <td>{{ contact.firstName}}  {{contact.lastName}}</td>
+            <td>
+                <div class="btn-group">
+                    <a class="btn btn-default btn-sm" title="Uredi" data-toggle="modal" data-target="#edit-modal" (click)="onClickEditTag(tag)">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
+                    <a class="btn btn-default btn-sm" title="Detalji">
+                        <span class="glyphicon glyphicon-info-sign"></span>
+                    </a>
+                    <a class="btn btn-default btn-sm" title="Obriši" (click)="deleteTag(tag)">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </a>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>

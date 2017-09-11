@@ -11,6 +11,7 @@ import { FetchDataComponent } from './components/fetchdata/fetchdata.component';
 import { CounterComponent } from './components/counter/counter.component';
 import { ContactsComponent } from './components/contacts/contacts.component';
 import { TagsComponent } from './components/tags/tags.component';
+import { TagdetailsComponent } from './components/tagdetails/tagdetails.component';
 
 @NgModule({
     declarations: [
@@ -20,7 +21,8 @@ import { TagsComponent } from './components/tags/tags.component';
         FetchDataComponent,
         HomeComponent,
 		ContactsComponent,
-		TagsComponent
+		TagsComponent,
+		TagdetailsComponent
     ],
     imports: [
         CommonModule,
@@ -33,6 +35,7 @@ import { TagsComponent } from './components/tags/tags.component';
             { path: 'fetch-data', component: FetchDataComponent },
 			{ path: 'home', component: ContactsComponent },
 			{ path: 'tags', component: TagsComponent },
+			{ path: 'tagdetails/:id', component: TagdetailsComponent },
             { path: '**', redirectTo: 'home' }
         ])
     ]

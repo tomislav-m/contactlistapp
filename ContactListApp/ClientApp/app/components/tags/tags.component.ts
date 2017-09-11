@@ -15,6 +15,7 @@ export class TagsComponent {
 		name : ""
 	};
 	public tempMessage : TempMessage;
+	public index : number;
 
     constructor(http: Http, @Inject('BASE_URL') baseUrl: string) {
         http.get(baseUrl + 'api/tags').subscribe(result => {
@@ -26,7 +27,6 @@ export class TagsComponent {
 	addTag() : void {
 		var headers = new Headers();
         headers.append('Content-Type', 'application/json');
-		console.log(this.tempMessage)
 
 		this.http.post("api/Tags", this.newTag, {headers: headers})
 			.map(response => response.json() as Tag)
@@ -38,6 +38,28 @@ export class TagsComponent {
 			},
 			error => {
 				this.showTempMessage("Greška pri dodavanju grupe!", false);
+			});
+	}
+
+	onClickEditTag(tag : Tag){
+		this.newTag.id = tag.id;
+		this.newTag.name = tag.name;
+		this.index = this.tags.indexOf(tag);
+	}
+
+	editTag() : void {
+		var headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+
+		this.http.put("api/Tags/" + this.newTag.id, this.newTag, {headers: headers})
+			.map(response => response.json() as Tag)
+			.subscribe(result => {
+				this.tags[this.index].name = this.newTag.name;
+				this.showTempMessage("Grupa " + this.newTag.name + " uspješno uređena!", true);
+				this.newTag.name = "";
+			},
+			error => {
+				this.showTempMessage("Greška pri uređivanju grupe!", false);
 			});
 	}
 
@@ -77,4 +99,3 @@ interface TempMessage {
 	message : string;
 	status : boolean;
 }
-

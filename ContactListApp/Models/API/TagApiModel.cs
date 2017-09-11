@@ -10,5 +10,6 @@ namespace ContactListApp.Models.API
         public int Id { get; set; }
         public string Name { get; set; }
         public int Count { get; set; }
+        public virtual ICollection<ContactApiModel> Contacts { get; set; }
     }
 }
