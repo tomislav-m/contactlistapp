@@ -9,7 +9,7 @@ import 'rxjs/add/operator/map';
 })
 export class TagsComponent {
 	private http : Http;
-    public tags: Tag[];
+    public tags : Tag[];
 	public newTag : NewTag = {
 		id : 0, 
 		name : ""

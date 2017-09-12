@@ -40,7 +40,6 @@ namespace ContactListApp.Controllers
 
             var contact = await _context.Contacts
                 .Include(n => n.Numbers)
-                .ThenInclude(t => t.Type)
                 .Include(e => e.Emails)
                 .Include(ct => ct.ContactTags)
                 .ThenInclude(t => t.Tag)
@@ -60,7 +59,7 @@ namespace ContactListApp.Controllers
             var numbers = new List<PhoneNumberApiModel>();
             foreach(var number in contact.Numbers)
             {
-                numbers.Add(new PhoneNumberApiModel { Id = number.Id, Number = number.Number, TypeId = number.PhoneTypeId, Type = number.Type.Type });
+                numbers.Add(new PhoneNumberApiModel { Id = number.Id, Number = number.Number, TypeId = number.PhoneTypeId, Type = _context.PhoneTypes.SingleOrDefault(t => t.Id == number.PhoneTypeId).Type });
             }
 
             var emails = new List<EmailApiModel>();
