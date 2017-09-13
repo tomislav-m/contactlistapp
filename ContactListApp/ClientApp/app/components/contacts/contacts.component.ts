@@ -5,10 +5,12 @@ import 'rxjs/add/operator/map';
 
 @Component({
     selector: 'contacts',
-    templateUrl: './contacts.component.html'
+    templateUrl: './contacts.component.html',
+    styleUrls: ['./contacts.component.css']
 })
 export class ContactsComponent {
 	private http : Http;
+	public op : string = "add";
     public contacts: Contact[];
 	public types : PhoneType[];
 	public tags : Tag[];
@@ -35,7 +37,8 @@ export class ContactsComponent {
 		address : "",
 		numbers : this.phoneNumbers,
 		emails : this.emails,
-		contactTags : this.contactTags
+		contactTags : this.contactTags,
+		tags : this.selectedTags
 	};
 
     constructor(http: Http, @Inject('BASE_URL') baseUrl: string) {
@@ -48,7 +51,8 @@ export class ContactsComponent {
 		this.emails.push(this.email);
     }
 
-	search(category : string, query : string) : void {
+	search(category : string, query : string, event : any) : void {
+		event.stopPropagation();
 		this.http.get('api/contacts/search?' + 'category=' + category + '&query=' + query).subscribe(result => {
             this.contacts = result.json() as Contact[];
         }, error => console.error(error));
@@ -86,10 +90,16 @@ export class ContactsComponent {
 		emailAddress : ""
 		};
 		this.emails.push(newEmail);
+		console.log(this.newContact);
 	};
 
 	deleteEmail(index : number) : void {
 		this.emails.splice(index, 1);
+	}
+
+	addEditContact(){
+		if (this.op == "add") this.addContact();
+		else if (this.op == "edit") this.editContact();
 	}
 
 	addContact() : void {
@@ -127,19 +137,7 @@ export class ContactsComponent {
 			.subscribe(result => {
 				this.contacts.push(result);
 
-				this.phoneNumbers = [];
-				this.phoneNumber.number = "";
-				this.phoneNumbers.push(this.phoneNumber);
-
-				this.emails = [];
-				this.email.emailAddress = "";
-				this.emails.push(this.email);
-
-				this.newContact.firstName = "";
-				this.newContact.lastName = "";
-				this.newContact.address = "";
-				this.newContact.numbers = this.phoneNumbers;
-				this.newContact.emails = this.emails;
+				this.resetForm();
 
 				this.showTempMessage("Kontakt " + result.firstName + " " + result.lastName +  " uspješno dodan!", true);
 			},
@@ -147,6 +145,68 @@ export class ContactsComponent {
 				this.showTempMessage("Greška pri dodavanju kontakta!", false);
 				console.log(error);
 			});
+	}
+
+	onClickEditContact(contact : Contact){
+		this.http.get('api/contacts/' + contact.id).subscribe(result => {
+            this.newContact = result.json() as Contact;
+			this.phoneNumbers = this.newContact.numbers;
+			this.emails = this.newContact.emails;
+			let selectedTags : Tag[] = [];
+			for(let tag of this.newContact.tags){
+				this.tags.filter(t => t.id === tag.id)[0].checked = true;
+			}
+        }, error => console.error(error));
+	}
+
+	editContact() {
+		var headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+
+		for(let tag of this.tags){
+			if(tag.checked){
+				let contactTag : ContactTag = {
+					contactId : this.newContact.id,
+					tagId : tag.id
+				};
+				this.contactTags.push(contactTag);
+			}
+		}
+
+		this.newContact.emails = this.emails;
+		this.newContact.numbers = this.phoneNumbers;
+		this.newContact.contactTags = this.contactTags;
+		console.log(this.newContact);
+
+		this.http.put("/api/Contacts/" + this.newContact.id, this.newContact, {headers: headers})
+			.map(response => response.json() as Contact)
+			.subscribe(result => {
+				let contact = this.contacts.filter(c => c.id === this.newContact.id)[0];
+				contact.firstName = this.newContact.firstName;
+				contact.lastName = this.newContact.lastName;
+				this.showTempMessage("Kontakt " + this.newContact.firstName + " " + this.newContact.lastName +  " uspješno uređen!", true);
+
+				
+			},
+			error => {
+				this.showTempMessage("Greška pri uređivanju kontakta!", false);
+			});
+	}
+
+	resetForm(){
+		this.phoneNumbers = [];
+		this.phoneNumber.number = "";
+		this.phoneNumbers.push(this.phoneNumber);
+
+		this.emails = [];
+		this.email.emailAddress = "";
+		this.emails.push(this.email);
+
+		this.newContact.firstName = "";
+		this.newContact.lastName = "";
+		this.newContact.address = "";
+		this.newContact.numbers = this.phoneNumbers;
+		this.newContact.emails = this.emails;
 	}
 
 	populatePhoneTypes() : void {
@@ -186,6 +246,7 @@ interface Contact {
 	numbers : PhoneNumber[];
 	emails : Email[];
 	contactTags : ContactTag[];
+	tags : Tag[];
 }
 
 interface PhoneNumber {

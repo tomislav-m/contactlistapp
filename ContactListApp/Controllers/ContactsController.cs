@@ -60,7 +60,7 @@ namespace ContactListApp.Controllers
             var numbers = new List<PhoneNumberApiModel>();
             foreach(var number in contact.Numbers)
             {
-                numbers.Add(new PhoneNumberApiModel { Id = number.Id, Number = number.Number, TypeId = number.PhoneTypeId, Type = _context.PhoneTypes.SingleOrDefault(t => t.Id == number.PhoneTypeId).Type });
+                numbers.Add(new PhoneNumberApiModel { Id = number.Id, Number = number.Number, PhoneTypeId = number.PhoneTypeId, Type = _context.PhoneTypes.SingleOrDefault(t => t.Id == number.PhoneTypeId).Type });
             }
 
             var emails = new List<EmailApiModel>();
@@ -87,6 +87,7 @@ namespace ContactListApp.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutContact([FromRoute] int id, [FromBody] Contact contact)
         {
+            bool flag = false;
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -96,6 +97,57 @@ namespace ContactListApp.Controllers
             {
                 return BadRequest();
             }
+
+            foreach(var mail in _context.Mails.Where(m => m.ContactId == id))
+            {
+                flag = false;
+                foreach(var newMail in contact.Emails)
+                {
+                    if (newMail.Id == mail.Id)
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag) _context.Mails.Remove(mail);
+            }
+            foreach (var number in _context.PhoneNumbers.Where(n => n.ContactId == id))
+            {
+                flag = false;
+                foreach (var newNumber in contact.Numbers)
+                {
+                    if (newNumber.Id == number.Id)
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag) _context.PhoneNumbers.Remove(number);
+            }
+            foreach (var contactTag in _context.ContactTags.Where(c => c.ContactId == id))
+            {
+                flag = false;
+                foreach(var newTag in contact.ContactTags)
+                {
+                    if (newTag.TagId == contactTag.TagId)
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag) _context.ContactTags.Remove(contactTag);
+            }
+
+            _context.Mails.AddRange(contact.Emails.Where(e => e.Id == 0));
+            _context.PhoneNumbers.AddRange(contact.Numbers.Where(n => n.Id == 0));
+            foreach(var contactTag in contact.ContactTags)
+            {
+                if(_context.ContactTags.SingleOrDefault(ct => ct.ContactId == contactTag.ContactId && ct.TagId == contactTag.TagId) == null)
+                {
+                    _context.ContactTags.Add(contactTag);
+                }
+            }
+
 
             _context.Entry(contact).State = EntityState.Modified;
 
