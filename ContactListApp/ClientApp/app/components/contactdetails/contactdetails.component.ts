@@ -49,6 +49,26 @@ export class ContactdetailsComponent
         }, error => console.error(error));
 		this.http = http;
     }
+
+	deleteContact(contact : Contact) : void {
+		if(confirm("Jeste li sigurni?")){
+			var path = this.activatedRoute.snapshot.url[1].path;
+			this.http.delete("api/Contacts/" + path)
+				.subscribe(response => {
+					this.router.navigate(['/home']);
+				},
+				error => {
+					this.showTempMessage("Greška pri brisanju kontakta!", false);
+				});
+		}
+	}
+
+	showTempMessage(message : string, status : boolean) : void {
+		this.tempMessage = {
+			message : message,
+			status : status
+		};
+	}
 }
 
 interface Contact {

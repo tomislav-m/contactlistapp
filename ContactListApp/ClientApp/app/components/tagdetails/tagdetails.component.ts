@@ -22,6 +22,8 @@ export class TagdetailsComponent {
             this.tag = result.json() as Tag;
         }, error => console.error(error));
 		this.http = http;
+		this.router = router;
+		this.activatedRoute = activatedRoute;
     }
 
 	deleteContact(contact : Contact) : void {
@@ -33,6 +35,33 @@ export class TagdetailsComponent {
 				},
 				error => {
 					this.showTempMessage("Greška pri brisanju kontakta!", false);
+				});
+		}
+	}
+
+	editTag() : void {
+		var headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+
+		this.http.put("api/Tags/" + this.tag.id, this.tag, {headers: headers})
+			.map(response => response.json() as Tag)
+			.subscribe(result => {
+				this.showTempMessage("Grupa " + this.tag.name + " uspješno uređena!", true);
+			},
+			error => {
+				this.showTempMessage("Greška pri uređivanju grupe!", false);
+			});
+	}
+
+	deleteTag() : void {
+		if(confirm("Jeste li sigurni?")){
+		var path = this.activatedRoute.snapshot.url[1].path;
+			this.http.delete("api/Tags/" + path)
+				.subscribe(response => {
+					this.router.navigate(['/tags']);
+				},
+				error => {
+					this.showTempMessage("Greška pri brisanju grupe!", false);
 				});
 		}
 	}

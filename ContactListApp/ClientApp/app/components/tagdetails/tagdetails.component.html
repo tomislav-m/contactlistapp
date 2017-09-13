@@ -3,6 +3,15 @@
 </div>
 <h1>{{ tag.name }}</h1>
 
+<p>
+    <button class="btn btn-primary" title="Obriši" (click)="deleteTag()">
+        <span class="glyphicon glyphicon-trash"></span>
+    </button>
+    <button class="btn btn-primary" title="Uredi" data-toggle="modal" data-target="#edit-modal">
+        <span class="glyphicon glyphicon-pencil"></span>
+    </button>
+</p>
+
 <p *ngIf="!tag"><em>Loading...</em></p>
 
 <table *ngIf="tag" class="table">
@@ -31,3 +40,25 @@
         </tr>
     </tbody>
 </table>
+
+<div id="edit-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Uredi grupu</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <input [(ngModel)]="tag.name" name="tagName" class="form-control" placeholder="Naziv grupe" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-primary" data-dismiss="modal" (click)="editTag()">Spremi</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Odustani</button>
+            </div>
+        </div>
+    </div>
+</div>

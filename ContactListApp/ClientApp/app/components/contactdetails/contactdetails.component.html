@@ -3,6 +3,12 @@
 </div>
 <h1>{{ contact.firstName }} {{ contact.lastName }}</h1>
 
+<p>
+    <button class="btn btn-primary" title="Obriši" (click)="deleteContact()">
+        <span class="glyphicon glyphicon-trash"></span>
+    </button>
+</p>
+
 <p *ngIf="!contact"><em>Loading...</em></p>
 
 <div *ngIf="contact">
