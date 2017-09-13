@@ -50,7 +50,6 @@ namespace ContactListApp.Controllers
 
             var tag = await _context.Tags
                 .Include(t => t.ContactTags)
-                .ThenInclude(c => c.Contact)
                 .SingleOrDefaultAsync(m => m.Id == id);
 
             if (tag == null)
@@ -59,7 +58,8 @@ namespace ContactListApp.Controllers
             }
 
             var contacts = new List<ContactApiModel>();
-            foreach(var contact in tag.ContactTags.Select(t => t.Contact))
+            foreach(var contactTag in tag.ContactTags)
+                foreach(var contact in _context.Contacts.Where(c => c.Id == contactTag.ContactId))
             {
                 contacts.Add(new ContactApiModel {
                     Id = contact.Id,

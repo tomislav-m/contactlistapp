@@ -14,6 +14,7 @@ export class ContactsComponent {
 	public tags : Tag[];
 	public selectedTags : Tag[] = [];
 	public tempMessage : TempMessage;
+	public contactTags : ContactTag[] = [];
 	public phoneNumber : PhoneNumber = {
 		id : 0,
 		number : "",
@@ -33,7 +34,8 @@ export class ContactsComponent {
 		lastName : "",
 		address : "",
 		numbers : this.phoneNumbers,
-		emails : this.emails
+		emails : this.emails,
+		contactTags : this.contactTags
 	};
 
     constructor(http: Http, @Inject('BASE_URL') baseUrl: string) {
@@ -91,17 +93,39 @@ export class ContactsComponent {
 		this.newContact.numbers = this.phoneNumbers;
 		this.newContact.emails = this.emails;
 		
-		this.selectedTags = [];
 		for(let tag of this.tags){
 			if(tag.checked){
-				this.selectedTags.push(tag);
+				let contactTag : ContactTag = {
+					contactId : this.newContact.id,
+					tagId : tag.id
+				};
+				this.contactTags.push(contactTag);
 			}
 		}
+
+		this.newContact.contactTags = this.contactTags;
+
+		console.log(this.newContact);
 
 		this.http.post("api/Contacts/", this.newContact, {headers: headers})
 			.map(response => response.json() as Contact)
 			.subscribe(result => {
 				this.contacts.push(result);
+
+				this.phoneNumbers = [];
+				this.phoneNumber.number = "";
+				this.phoneNumbers.push(this.phoneNumber);
+
+				this.emails = [];
+				this.email.emailAddress = "";
+				this.emails.push(this.email);
+
+				this.newContact.firstName = "";
+				this.newContact.lastName = "";
+				this.newContact.address = "";
+				this.newContact.numbers = this.phoneNumbers;
+				this.newContact.emails = this.emails;
+
 				this.showTempMessage("Kontakt " + result.firstName + " " + result.lastName +  " uspješno dodan!", true);
 			},
 			error => {
@@ -146,6 +170,7 @@ interface Contact {
 	address : string;
 	numbers : PhoneNumber[];
 	emails : Email[];
+	contactTags : ContactTag[];
 }
 
 interface PhoneNumber {
@@ -169,6 +194,11 @@ interface Tag {
 	name: string;
 	checked : boolean;
 	count : number;
+}
+
+interface ContactTag {
+	contactId : number;
+	tagId : number;
 }
 
 interface TempMessage {

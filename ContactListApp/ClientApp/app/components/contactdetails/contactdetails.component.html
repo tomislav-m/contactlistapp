@@ -1,0 +1,59 @@
+﻿<div *ngIf="tempMessage && tempMessage.message != ''">
+    <p class="alert" [ngClass]="( tempMessage.status === true)?'alert-success' : 'alert-danger'">{{ tempMessage.message }}</p>
+</div>
+<h1>{{ contact.firstName }} {{ contact.lastName }}</h1>
+
+<p *ngIf="!contact"><em>Loading...</em></p>
+
+<div *ngIf="contact">
+    <table *ngIf="contact.address" class="table">
+        <thead>
+            <tr>
+                <th>Adresa</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ contact.address }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <table *ngIf="contact.numbers" class="table">
+        <thead>
+            <tr>
+                <th>Brojevi</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let number of contact.numbers">
+            <tr>
+                <td>{{ number.number }}</td>
+                <td>{{ number.type }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <table *ngIf="contact.emails" class="table">
+        <thead>
+            <tr>
+                <th>Emails</th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let email of contact.emails">
+            <tr>
+                <td>{{ email.emailAddress }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <table *ngIf="contact.tags" class="table">
+        <thead>
+            <tr>
+                <th>Grupe</th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let tag of contact.tags">
+            <tr>
+                <td>{{ tag.name }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

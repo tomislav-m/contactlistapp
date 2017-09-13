@@ -69,8 +69,8 @@ namespace ContactListApp.Data
             {
                 var contactTag = new ContactTag
                 {
-                    Contact = contact,
-                    Tag = context.Tags.SingleOrDefault(t => t.Name == tag)
+                    ContactId = contact.Id,
+                    TagId = context.Tags.SingleOrDefault(t => t.Name == tag).Id
                 };
                 context.ContactTags.Add(contactTag);
             }

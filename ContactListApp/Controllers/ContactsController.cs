@@ -42,18 +42,19 @@ namespace ContactListApp.Controllers
                 .Include(n => n.Numbers)
                 .Include(e => e.Emails)
                 .Include(ct => ct.ContactTags)
-                .ThenInclude(t => t.Tag)
                 .SingleOrDefaultAsync(m => m.Id == id);
 
             if (contact == null)
             {
                 return NotFound();
             }
-            
+
             var tags = new List<TagApiModel>();
-            foreach(var tag in contact.ContactTags.Select(t => t.Tag))
-            {
-                tags.Add(new TagApiModel { Id = tag.Id, Name = tag.Name });
+            foreach (var tagId in contact.ContactTags.Select(t => t.TagId)) {
+                foreach (var tag in _context.Tags.Where(t => t.Id == tagId))
+                {
+                    tags.Add(new TagApiModel { Id = tag.Id, Name = tag.Name });
+                }
             }
 
             var numbers = new List<PhoneNumberApiModel>();
