@@ -12,7 +12,7 @@
     </button>
 </p>
 
-<p *ngIf="!tag"><em>Loading...</em></p>
+<p *ngIf="!tag"><em>Učitavanje...</em></p>
 
 <table *ngIf="tag" class="table">
     <thead>
@@ -26,7 +26,7 @@
             <td>{{ contact.firstName}}  {{contact.lastName}}</td>
             <td>
                 <div class="btn-group">
-                    <a class="btn btn-default btn-sm" title="Uredi" data-toggle="modal" data-target="#edit-modal">
+                    <a class="btn btn-default btn-sm" title="Uredi" data-toggle="modal" data-target="#editContact-modal" (click)="onClickEditContact(contact)">
                         <span class="glyphicon glyphicon-pencil"></span>
                     </a>
                     <a class="btn btn-default btn-sm" title="Detalji" [routerLink]="['/contactdetails', contact.id]">
@@ -57,6 +57,98 @@
             </div>
             <div class="modal-footer">
                 <a class="btn btn-primary" data-dismiss="modal" (click)="editTag()">Spremi</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Odustani</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="editContact-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Kontakt</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-md-2"><label>Ime</label></div>
+                            <div class="col-md-5"><input [(ngModel)]="newContact.firstName" name="contactName" class="form-control" placeholder="Ime" /></div>
+                        </div>
+                    </div><br />
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-md-2"><label>Prezime</label></div>
+                            <div class="col-md-5"><input [(ngModel)]="newContact.lastName" name="contactLastame" class="form-control" placeholder="Prezime" /></div>
+                        </div>
+                    </div><br />
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-md-2"><label>Adresa</label></div>
+                            <div class="col-md-5"><input [(ngModel)]="newContact.address" name="contactAddress" class="form-control" placeholder="Adresa" /></div>
+                        </div>
+                    </div><br />
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-md-2"><label>Telefon</label></div>
+                            <div *ngFor="let number of phoneNumbers; let i = index">
+                                <div [ngClass]="(i === 0)?'col-md-5':'col-md-offset-2 col-md-5'">
+                                    <input [(ngModel)]="number.number" [ngModelOptions]="{standalone: true}" class="form-control" placeholder="Broj telefona" />
+                                </div>
+                                <div class="col-md-3">
+                                    <select required class="form-control" [(ngModel)]="number.phoneTypeId" [ngModelOptions]="{standalone: true}">
+                                        <option *ngFor="let type of types" value="{{type.id}}">{{type.type}}</option>
+                                    </select>
+                                </div>
+                                <div *ngIf="phoneNumbers.length > 1" class="col-md-2">
+                                    <button class="btn btn-xs btn-danger" title="Obriši broj" (click)="deleteNumber(i)">
+                                        <span class="glyphicon glyphicon-minus"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div *ngIf="phoneNumbers[phoneNumbers.length-1] !== undefined && phoneNumbers[phoneNumbers.length-1].number != '' || phoneNumbers.length == 0" class="col-md-offset-2">
+                            <button class="btn btn-xs btn-primary" title="Dodaj broj" (click)="addNewNumber()">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                        </div>
+                    </div><br />
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-md-2"><label>E-mail</label></div>
+                            <div *ngFor="let email of emails; let i = index">
+                                <div [ngClass]="(i === 0)?'col-md-5':'col-md-offset-2 col-md-5'">
+                                    <input [(ngModel)]="email.emailAddress" [ngModelOptions]="{standalone: true}" class="form-control" placeholder="Email adresa" />
+                                </div>
+                                <div *ngIf="emails.length > 1" class="col-md-2">
+                                    <button class="btn btn-xs btn-danger" title="Obriši email" (click)="deleteEmail(i)">
+                                        <span class="glyphicon glyphicon-minus"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div *ngIf="emails[emails.length-1] !== undefined && emails[emails.length-1].emailAddress != '' || emails.length == 0" class="col-md-offset-2">
+                            <button class="btn btn-xs btn-primary" title="Dodaj email" (click)="addNewEmail()">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                        </div>
+                    </div><br />
+                    <div class="row">
+                        <div class="col-md-2"><label>Grupe</label></div>
+                        <div *ngFor="let tag of tags" class="col-md-2">
+                            <input type="checkbox" [ngModelOptions]="{standalone: true}" value="{{tag.name}}" [(ngModel)]="tag.checked" /> {{tag.name}}
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-primary" data-dismiss="modal" (click)="editContact()">Spremi</a>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Odustani</button>
             </div>
         </div>

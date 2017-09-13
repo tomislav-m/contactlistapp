@@ -111,7 +111,9 @@ namespace ContactListApp.Controllers
                 }
                 if (!flag) _context.Mails.Remove(mail);
             }
-            foreach (var number in _context.PhoneNumbers.Where(n => n.ContactId == id))
+
+
+            foreach (var number in _context.PhoneNumbers.Where(n => n.ContactId == id).ToList())
             {
                 flag = false;
                 foreach (var newNumber in contact.Numbers)
@@ -119,6 +121,8 @@ namespace ContactListApp.Controllers
                     if (newNumber.Id == number.Id)
                     {
                         flag = true;
+                        number.PhoneTypeId = newNumber.PhoneTypeId;
+                        _context.PhoneNumbers.Update(number);
                         break;
                     }
                 }
@@ -147,7 +151,6 @@ namespace ContactListApp.Controllers
                     _context.ContactTags.Add(contactTag);
                 }
             }
-
 
             _context.Entry(contact).State = EntityState.Modified;
 
