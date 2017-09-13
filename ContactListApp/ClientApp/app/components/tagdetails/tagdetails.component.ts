@@ -20,10 +20,29 @@ export class TagdetailsComponent {
 		var path = activatedRoute.snapshot.url[1].path;
         http.get(baseUrl + 'api/tags/' + path).subscribe(result => {
             this.tag = result.json() as Tag;
-			console.log(this.tag);
         }, error => console.error(error));
 		this.http = http;
     }
+
+	deleteContact(contact : Contact) : void {
+		if(confirm("Jeste li sigurni?")){
+			this.http.delete("api/Contacts/" + contact.id)
+				.subscribe(response => {
+					this.tag.contacts.splice(this.tag.contacts.indexOf(contact), 1);
+					this.showTempMessage("Kontakt " + contact.firstName + " " + contact.lastName + " uspješno obrisan!", true);
+				},
+				error => {
+					this.showTempMessage("Greška pri brisanju kontakta!", false);
+				});
+		}
+	}
+
+	showTempMessage(message : string, status : boolean) : void {
+		this.tempMessage = {
+			message : message,
+			status : status
+		};
+	}
 }
 
 interface Tag {

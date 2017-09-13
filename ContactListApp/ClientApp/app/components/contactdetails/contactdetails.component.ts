@@ -46,7 +46,6 @@ export class ContactdetailsComponent
 		var path = activatedRoute.snapshot.url[1].path;
         http.get(baseUrl + 'api/contacts/' + path).subscribe(result => {
             this.contact = result.json() as Contact;
-			console.log(this.contact);
         }, error => console.error(error));
 		this.http = http;
     }

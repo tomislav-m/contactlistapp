@@ -17,13 +17,13 @@
             <td>{{ contact.firstName}}  {{contact.lastName}}</td>
             <td>
                 <div class="btn-group">
-                    <a class="btn btn-default btn-sm" title="Uredi" data-toggle="modal" data-target="#edit-modal" (click)="onClickEditTag(tag)">
+                    <a class="btn btn-default btn-sm" title="Uredi" data-toggle="modal" data-target="#edit-modal">
                         <span class="glyphicon glyphicon-pencil"></span>
                     </a>
-                    <a class="btn btn-default btn-sm" title="Detalji">
+                    <a class="btn btn-default btn-sm" title="Detalji" [routerLink]="['/contactdetails', contact.id]">
                         <span class="glyphicon glyphicon-info-sign"></span>
                     </a>
-                    <a class="btn btn-default btn-sm" title="Obriši" (click)="deleteTag(tag)">
+                    <a class="btn btn-default btn-sm" title="Obriši" (click)="deleteContact(contact)">
                         <span class="glyphicon glyphicon-remove"></span>
                     </a>
                 </div>

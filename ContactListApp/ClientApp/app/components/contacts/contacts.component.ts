@@ -48,6 +48,12 @@ export class ContactsComponent {
 		this.emails.push(this.email);
     }
 
+	search(category : string, query : string) : void {
+		this.http.get('api/contacts/search?' + 'category=' + category + '&query=' + query).subscribe(result => {
+            this.contacts = result.json() as Contact[];
+        }, error => console.error(error));
+	}
+
 	deleteContact(contact : Contact) : void {
 		if(confirm("Jeste li sigurni?")){
 			this.http.delete("api/Contacts/" + contact.id)
@@ -72,7 +78,6 @@ export class ContactsComponent {
 
 	deleteNumber(index : number) {
 		this.phoneNumbers.splice(index, 1);
-		console.log(this.phoneNumbers);
 	}
 
 	addNewEmail() : void {
@@ -90,7 +95,19 @@ export class ContactsComponent {
 	addContact() : void {
 		var headers = new Headers();
         headers.append('Content-Type', 'application/json');
+
+		for(let number of this.phoneNumbers){
+			if(number.number == ""){
+				this.phoneNumbers.splice(this.phoneNumbers.indexOf(number), 1);
+			}
+		}
 		this.newContact.numbers = this.phoneNumbers;
+
+		for(let email of this.emails){
+			if(email.emailAddress == ""){
+				this.emails.splice(this.emails.indexOf(email), 1);
+			}
+		}
 		this.newContact.emails = this.emails;
 		
 		for(let tag of this.tags){
@@ -104,8 +121,6 @@ export class ContactsComponent {
 		}
 
 		this.newContact.contactTags = this.contactTags;
-
-		console.log(this.newContact);
 
 		this.http.post("api/Contacts/", this.newContact, {headers: headers})
 			.map(response => response.json() as Contact)

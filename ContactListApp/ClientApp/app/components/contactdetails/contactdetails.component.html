@@ -6,7 +6,7 @@
 <p *ngIf="!contact"><em>Loading...</em></p>
 
 <div *ngIf="contact">
-    <table *ngIf="contact.address" class="table">
+    <table *ngIf="contact.address" class="table table-condensed">
         <thead>
             <tr>
                 <th>Adresa</th>
@@ -18,7 +18,7 @@
             </tr>
         </tbody>
     </table>
-    <table *ngIf="contact.numbers" class="table">
+    <table *ngIf="contact.numbers?.length > 0" class="table table-condensed">
         <thead>
             <tr>
                 <th>Brojevi</th>
@@ -32,7 +32,7 @@
             </tr>
         </tbody>
     </table>
-    <table *ngIf="contact.emails" class="table">
+    <table *ngIf="contact.emails?.length > 0" class="table table-condensed">
         <thead>
             <tr>
                 <th>Emails</th>
@@ -44,7 +44,7 @@
             </tr>
         </tbody>
     </table>
-    <table *ngIf="contact.tags" class="table">
+    <table *ngIf="contact.tags?.length > 0" class="table table-condensed">
         <thead>
             <tr>
                 <th>Grupe</th>

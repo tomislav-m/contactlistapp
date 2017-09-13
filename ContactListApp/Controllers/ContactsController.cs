@@ -154,6 +154,31 @@ namespace ContactListApp.Controllers
             return Ok(contact);
         }
 
+        [HttpGet("Search")]
+        public IEnumerable<Contact> Search([FromQuery] string category, [FromQuery] string query)
+        {
+            if(category == "firstName")
+            {
+                return _context.Contacts.Where(c => c.FirstName.Contains(query));
+            }
+
+            else if(category == "lastName")
+            {
+                return _context.Contacts.Where(c => c.LastName.Contains(query));
+            }
+
+            else
+            {
+                var contacts = new List<Contact>();
+                var contactIds = _context.Tags.Where(t => t.Name.Contains(query)).SelectMany(t => t.ContactTags).Select(c => c.ContactId);
+                foreach(var id in contactIds)
+                {
+                    contacts.Add(_context.Contacts.Where(c => c.Id == id).SingleOrDefault());
+                }
+                return contacts;
+            }
+        }
+
         private bool ContactExists(int id)
         {
             return _context.Contacts.Any(e => e.Id == id);
